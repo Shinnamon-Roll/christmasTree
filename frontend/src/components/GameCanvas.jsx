@@ -98,26 +98,28 @@ function GameCanvas({ grid, treeMask, width, height, onPixelClick, selectedColor
         return null;
     }, [width, height]);
 
-    // Paint a pixel (with optimistic update)
+    // Paint a pixel or place emoji (with optimistic update for paint)
     const paintPixel = useCallback((pixelX, pixelY, index) => {
         // Check tree mask
         if (treeMask && !treeMask[index]) {
             return false;
         }
 
-        // Skip if same pixel was just painted
+        // Skip if same pixel was just interacted with
         if (lastPaintedPixelRef.current === index) {
             return false;
         }
         lastPaintedPixelRef.current = index;
 
-        // Draw immediately on canvas (optimistic update - no flicker!)
-        drawPixelImmediate(pixelX, pixelY, selectedColor);
+        // Only draw immediately on canvas if NOT in emoji mode
+        if (!isEmojiMode) {
+            drawPixelImmediate(pixelX, pixelY, selectedColor);
+        }
 
-        // Send to server
+        // Send to server/handler (works for both paint and emoji)
         onPixelClick(pixelX, pixelY);
         return true;
-    }, [treeMask, selectedColor, drawPixelImmediate, onPixelClick]);
+    }, [treeMask, selectedColor, drawPixelImmediate, onPixelClick, isEmojiMode]);
 
     // Handle mouse down - start painting
     const handleMouseDown = useCallback((event) => {
@@ -132,7 +134,7 @@ function GameCanvas({ grid, treeMask, width, height, onPixelClick, selectedColor
         }
     }, [disabled, getPixelFromEvent, paintPixel]);
 
-    // Handle mouse move - continue painting if dragging
+    // Handle mouse move - continue painting if dragging (ONLY for paint mode, not emoji)
     const handleMouseMove = useCallback((event) => {
         if (disabled) return;
 
@@ -146,14 +148,15 @@ function GameCanvas({ grid, treeMask, width, height, onPixelClick, selectedColor
         if (treeMask && !treeMask[pixel.index]) {
             canvas.style.cursor = 'not-allowed';
         } else {
-            canvas.style.cursor = 'crosshair';
+            canvas.style.cursor = isEmojiMode ? 'pointer' : 'crosshair';
         }
 
-        // If painting (mouse held down), paint this pixel
-        if (isPaintingRef.current) {
+        // If painting (mouse held down) AND not in emoji mode, paint this pixel
+        // Emoji mode requires single clicks only
+        if (isPaintingRef.current && !isEmojiMode) {
             paintPixel(pixel.pixelX, pixel.pixelY, pixel.index);
         }
-    }, [disabled, getPixelFromEvent, treeMask, paintPixel]);
+    }, [disabled, getPixelFromEvent, treeMask, paintPixel, isEmojiMode]);
 
     // Handle mouse up - stop painting
     const handleMouseUp = useCallback(() => {

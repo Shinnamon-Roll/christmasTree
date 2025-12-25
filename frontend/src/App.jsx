@@ -7,9 +7,9 @@ import MessageInput from './components/MessageInput';
 import FallingItems from './components/FallingItems';
 import EmojiPalette from './components/EmojiPalette';
 
-// Constants
-const GRID_WIDTH = 100;
-const GRID_HEIGHT = 150;
+// Constants - Bigger tree!
+const GRID_WIDTH = 120;
+const GRID_HEIGHT = 180;
 
 // Christmas color palette (16 colors)
 const COLORS = [
@@ -61,15 +61,14 @@ function App() {
     return `${protocol}//${host}/ws`;
   }, []);
 
-  // Add a falling item
+  // Add a falling item (no auto-remove - FallingItems handles looping)
   const addFallingItem = useCallback((item) => {
     const id = ++itemIdRef.current;
-    setFallingItems(prev => [...prev, { ...item, id }]);
-
-    // Remove item after animation completes (10 seconds)
-    setTimeout(() => {
-      setFallingItems(prev => prev.filter(i => i.id !== id));
-    }, 10000);
+    setFallingItems(prev => {
+      const newItems = [...prev, { ...item, id }];
+      // Keep max 20 items in state
+      return newItems.slice(-20);
+    });
   }, []);
 
   // WebSocket connection
@@ -225,6 +224,26 @@ function App() {
     setIsEmojiMode(prev => !prev);
   }, []);
 
+  // Reset tree to default colors
+  const resetTree = useCallback(() => {
+    if (!grid || !treeMask) return;
+
+    // Paint all tree pixels with default background color
+    const defaultColor = '#1a1a2e';
+    for (let i = 0; i < grid.length; i++) {
+      if (treeMask[i]) {
+        sendPaint(i, defaultColor);
+      }
+    }
+    // Also clear emojis
+    setPlacedEmojis([]);
+  }, [grid, treeMask, sendPaint]);
+
+  // Clear all falling items
+  const clearFallingItems = useCallback(() => {
+    setFallingItems([]);
+  }, []);
+
   // Connect on mount
   useEffect(() => {
     connectWebSocket();
@@ -295,46 +314,49 @@ function App() {
         <p>Paint together with people around the world!</p>
       </header>
 
-      {/* Canvas */}
-      <div className="canvas-container">
-        <GameCanvas
-          grid={grid}
-          treeMask={treeMask}
-          width={GRID_WIDTH}
-          height={GRID_HEIGHT}
-          onPixelClick={handleCanvasClick}
-          selectedColor={selectedColor}
-          isEmojiMode={isEmojiMode}
-          placedEmojis={placedEmojis}
-          disabled={false}
-        />
-      </div>
+      {/* Main Game Area - Tree with Left Sidebar */}
+      <div className="game-area">
+        {/* Left Sidebar - Tools */}
+        <div className="left-sidebar">
+          <MessageInput
+            onSendMessage={sendMessage}
+            onSendImage={sendImage}
+          />
+          <Palette
+            colors={COLORS}
+            selectedColor={selectedColor}
+            onSelectColor={setSelectedColor}
+            disabled={isEmojiMode}
+          />
+          <EmojiPalette
+            selectedEmoji={selectedEmoji}
+            onSelectEmoji={setSelectedEmoji}
+            isEmojiMode={isEmojiMode}
+            onToggleMode={toggleEmojiMode}
+            disabled={false}
+          />
+          <Status
+            onlineCount={onlineCount}
+            onResetTree={resetTree}
+            onClearFallingItems={clearFallingItems}
+          />
+        </div>
 
-      {/* Controls */}
-      <div className="controls-panel">
-        <Palette
-          colors={COLORS}
-          selectedColor={selectedColor}
-          onSelectColor={setSelectedColor}
-          disabled={isEmojiMode}
-        />
-        <EmojiPalette
-          selectedEmoji={selectedEmoji}
-          onSelectEmoji={setSelectedEmoji}
-          isEmojiMode={isEmojiMode}
-          onToggleMode={toggleEmojiMode}
-          disabled={false}
-        />
-        <Status
-          onlineCount={onlineCount}
-        />
+        {/* Canvas */}
+        <div className="canvas-container">
+          <GameCanvas
+            grid={grid}
+            treeMask={treeMask}
+            width={GRID_WIDTH}
+            height={GRID_HEIGHT}
+            onPixelClick={handleCanvasClick}
+            selectedColor={selectedColor}
+            isEmojiMode={isEmojiMode}
+            placedEmojis={placedEmojis}
+            disabled={false}
+          />
+        </div>
       </div>
-
-      {/* Message Input */}
-      <MessageInput
-        onSendMessage={sendMessage}
-        onSendImage={sendImage}
-      />
     </div>
   );
 }

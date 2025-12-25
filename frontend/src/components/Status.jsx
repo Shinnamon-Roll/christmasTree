@@ -1,4 +1,4 @@
-function Status({ onlineCount }) {
+function Status({ onlineCount, onResetTree, onClearFallingItems }) {
     return (
         <div className="status">
             {/* Online Count */}
@@ -17,6 +17,28 @@ function Status({ onlineCount }) {
                     <div className="status-value ready">✓ Real-time!</div>
                 </div>
             </div>
+
+            {/* Reset Tree Button */}
+            {onResetTree && (
+                <button
+                    className="reset-tree-btn"
+                    onClick={onResetTree}
+                    title="Reset the tree to default colors"
+                >
+                    🗑️ Reset Tree
+                </button>
+            )}
+
+            {/* Clear Falling Items Button */}
+            {onClearFallingItems && (
+                <button
+                    className="clear-items-btn"
+                    onClick={onClearFallingItems}
+                    title="Clear all falling messages and images"
+                >
+                    ✖️ ลบข้อความ/รูป
+                </button>
+            )}
         </div>
     );
 }

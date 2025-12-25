@@ -80,8 +80,6 @@ body {
   flex-direction: column;
   align-items: center;
   padding: var(--spacing-lg);
-  padding-bottom: 120px;
-  /* Extra space for MessageInput */
   background:
     radial-gradient(ellipse at top, rgba(34, 139, 34, 0.15) 0%, transparent 50%),
     radial-gradient(ellipse at bottom, rgba(196, 30, 58, 0.1) 0%, transparent 50%),
@@ -141,6 +139,26 @@ body {
   font-size: 1rem;
 }
 
+/* Game Area - Side by Side Layout */
+.game-area {
+  display: flex;
+  gap: var(--spacing-lg);
+  z-index: 10;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Left Sidebar - Tools */
+.left-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-width: 280px;
+  max-width: 320px;
+}
+
 /* Main Canvas Container */
 .canvas-container {
   position: relative;
@@ -151,6 +169,7 @@ body {
   padding: var(--spacing-md);
   box-shadow: var(--shadow-soft), var(--shadow-glow);
   border: 1px solid rgba(255, 215, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .game-canvas {
@@ -159,6 +178,8 @@ body {
   border-radius: var(--radius-md);
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  max-height: 70vh;
+  width: auto;
 }
 
 .game-canvas.disabled {
@@ -166,7 +187,7 @@ body {
   opacity: 0.8;
 }
 
-/* Controls Panel */
+/* Controls Panel (for fallback, keeping original class) */
 .controls-panel {
   display: flex;
   flex-wrap: wrap;
@@ -196,7 +217,7 @@ body {
 
 .palette-colors {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-xs);
 }
 
@@ -294,6 +315,46 @@ body {
   }
 }
 
+/* Reset Tree Button */
+.reset-tree-btn {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: linear-gradient(135deg, #c41e3a, #ff6b6b);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.reset-tree-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.5);
+}
+
+/* Clear Falling Items Button */
+.clear-items-btn {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: linear-gradient(135deg, #ff8c00, #ffa500);
+  color: #1a1a2e;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.clear-items-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.5);
+}
+
 /* Cooldown Progress Bar */
 .cooldown-bar {
   width: 100%;
@@ -386,9 +447,29 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 900px) {
+  .game-area {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .game-canvas {
+    max-height: 50vh;
+  }
+}
+
 @media (max-width: 768px) {
   .app-container {
     padding: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
   }
 
   .header h1 {
@@ -402,6 +483,11 @@ body {
   .color-swatch {
     width: 40px;
     height: 40px;
+  }
+
+  .left-sidebar {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .controls-panel {
@@ -507,10 +593,8 @@ body {
    ============================================================================ */
 
 .message-input-container {
-  margin-top: var(--spacing-lg);
   z-index: 10;
   width: 100%;
-  max-width: 500px;
 }
 
 .message-form {

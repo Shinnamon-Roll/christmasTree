@@ -31,9 +31,9 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 // ============================================================================
 
 /// Grid dimensions
-const GRID_WIDTH: usize = 100;
-const GRID_HEIGHT: usize = 150;
-const GRID_SIZE: usize = GRID_WIDTH * GRID_HEIGHT; // 15,000 pixels
+const GRID_WIDTH: usize = 120;
+const GRID_HEIGHT: usize = 180;
+const GRID_SIZE: usize = GRID_WIDTH * GRID_HEIGHT; // 21,600 pixels
 
 /// Cooldown time in seconds
 const COOLDOWN_SECONDS: u64 = 5;
@@ -177,11 +177,11 @@ struct PixelData {
 fn generate_tree_mask() -> Vec<bool> {
     let mut mask = vec![false; GRID_SIZE];
     
-    // Tree parameters
-    let tree_top = 10;           // Y position of tree top
-    let tree_bottom = 130;       // Y position of tree bottom
-    let trunk_top = 130;         // Y position where trunk starts
-    let trunk_bottom = 145;      // Y position of trunk bottom
+    // Tree parameters (scaled for 120x180 grid)
+    let tree_top = 12;           // Y position of tree top
+    let tree_bottom = 156;       // Y position of tree bottom
+    let trunk_top = 156;         // Y position where trunk starts
+    let trunk_bottom = 174;      // Y position of trunk bottom
     let center_x = GRID_WIDTH / 2;
     
     // Draw the triangular tree body with a slight width variation for layers
@@ -189,12 +189,12 @@ fn generate_tree_mask() -> Vec<bool> {
         // Create a layered effect with 3 overlapping triangles
         let progress = (y - tree_top) as f32 / (tree_bottom - tree_top) as f32;
         
-        // Base triangle width
-        let base_half_width = (progress * 42.0) as usize;
+        // Base triangle width (scaled for 120 width)
+        let base_half_width = (progress * 50.0) as usize;
         
         // Add some waviness for a more natural look
         let layer_offset = if y % 20 < 5 { 2 } else { 0 };
-        let half_width = (base_half_width + layer_offset).min(45);
+        let half_width = (base_half_width + layer_offset).min(55);
         
         let left = center_x.saturating_sub(half_width);
         let right = (center_x + half_width).min(GRID_WIDTH - 1);
@@ -208,7 +208,7 @@ fn generate_tree_mask() -> Vec<bool> {
     }
     
     // Draw the trunk
-    let trunk_half_width = 6;
+    let trunk_half_width = 8;
     for y in trunk_top..=trunk_bottom {
         let left = center_x.saturating_sub(trunk_half_width);
         let right = (center_x + trunk_half_width).min(GRID_WIDTH - 1);
@@ -439,11 +439,7 @@ async fn handle_client_message(
         }
         
         ClientMessage::SendImage { data } => {
-            // Limit image size to ~100KB (base64)
-            if data.len() > 140_000 {
-                warn!("Image too large from user {}", user_id);
-                return;
-            }
+            // No size limit - accept any image
             
             // Basic validation - should start with data URI prefix
             if !data.starts_with("data:image/") {
