@@ -1,0 +1,14 @@
+/Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/deps/serde-c9dc52d176a93f2d.d: /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/build/serde-2beb76a2a4a45d11/out/private.rs
+
+/Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/deps/libserde-c9dc52d176a93f2d.rlib: /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/build/serde-2beb76a2a4a45d11/out/private.rs
+
+/Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/deps/libserde-c9dc52d176a93f2d.rmeta: /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/build/serde-2beb76a2a4a45d11/out/private.rs
+
+/Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/shinnamon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/build/serde-2beb76a2a4a45d11/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/shinnamon/Documents/GitHub/christmasTree/backend/target/debug/build/serde-2beb76a2a4a45d11/out

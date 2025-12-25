@@ -5,6 +5,7 @@ import Palette from './components/Palette';
 import Status from './components/Status';
 import MessageInput from './components/MessageInput';
 import FallingItems from './components/FallingItems';
+import EmojiPalette from './components/EmojiPalette';
 
 // Constants
 const GRID_WIDTH = 100;
@@ -39,6 +40,10 @@ function App() {
   const [connectionStatus, setConnectionStatus] = useState('connecting');
   const [isLoading, setIsLoading] = useState(true);
   const [fallingItems, setFallingItems] = useState([]);
+  const [isEmojiMode, setIsEmojiMode] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState('⭐');
+  const [placedEmojis, setPlacedEmojis] = useState([]);
+  const emojiIdRef = useRef(0);
 
   // Refs
   const wsRef = useRef(null);
@@ -196,9 +201,29 @@ function App() {
 
     const index = y * GRID_WIDTH + x;
     if (index >= 0 && index < GRID_WIDTH * GRID_HEIGHT) {
-      sendPaint(index, selectedColor);
+      // Check if pixel is in tree mask
+      if (treeMask && !treeMask[index]) return;
+
+      if (isEmojiMode) {
+        // Place emoji
+        const emojiId = ++emojiIdRef.current;
+        setPlacedEmojis(prev => [...prev, {
+          id: emojiId,
+          emoji: selectedEmoji,
+          x: x,
+          y: y
+        }]);
+      } else {
+        // Paint pixel
+        sendPaint(index, selectedColor);
+      }
     }
-  }, [grid, selectedColor, sendPaint]);
+  }, [grid, treeMask, selectedColor, sendPaint, isEmojiMode, selectedEmoji]);
+
+  // Toggle between paint and emoji mode
+  const toggleEmojiMode = useCallback(() => {
+    setIsEmojiMode(prev => !prev);
+  }, []);
 
   // Connect on mount
   useEffect(() => {
@@ -278,6 +303,9 @@ function App() {
           width={GRID_WIDTH}
           height={GRID_HEIGHT}
           onPixelClick={handleCanvasClick}
+          selectedColor={selectedColor}
+          isEmojiMode={isEmojiMode}
+          placedEmojis={placedEmojis}
           disabled={false}
         />
       </div>
@@ -288,6 +316,13 @@ function App() {
           colors={COLORS}
           selectedColor={selectedColor}
           onSelectColor={setSelectedColor}
+          disabled={isEmojiMode}
+        />
+        <EmojiPalette
+          selectedEmoji={selectedEmoji}
+          onSelectEmoji={setSelectedEmoji}
+          isEmojiMode={isEmojiMode}
+          onToggleMode={toggleEmojiMode}
           disabled={false}
         />
         <Status
