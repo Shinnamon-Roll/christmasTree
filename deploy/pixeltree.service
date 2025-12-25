@@ -1,0 +1,45 @@
+# Systemd Service for The Global Pixel Tree Backend
+# Place this file at: /etc/systemd/system/pixeltree.service
+#
+# Commands:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable pixeltree
+#   sudo systemctl start pixeltree
+#   sudo systemctl status pixeltree
+#   sudo journalctl -u pixeltree -f  (view logs)
+
+[Unit]
+Description=The Global Pixel Tree - Rust Backend
+Documentation=https://github.com/YOUR_USERNAME/christmasTree
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+# Working directory where the backend runs
+WorkingDirectory=/home/user/pixel-tree/backend
+
+# Path to the compiled Rust binary
+ExecStart=/home/user/pixel-tree/backend/target/release/pixel-tree-backend
+
+# Restart policy
+Restart=always
+RestartSec=5
+
+# Environment variables
+Environment=RUST_LOG=info
+Environment=RUST_BACKTRACE=1
+
+# Resource limits
+LimitNOFILE=65535
+
+# Security hardening (optional but recommended)
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/user/pixel-tree/data
+
+[Install]
+WantedBy=multi-user.target
